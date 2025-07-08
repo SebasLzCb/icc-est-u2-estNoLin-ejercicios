@@ -1,21 +1,213 @@
- **Ejercicio 1:** 
- Primero, para insertar un valor en un árbol binario, necesitamos crear un nodo que tenga atributos para su hijo izquierdo, derecho y el valor que va a contener. Luego, usamos un método de inserción que puede ser tanto simple como recursivo. Cuando insertamos, si el nodo actual está vacío (es decir, su valor es null), creamos un nuevo nodo con el valor proporcionado. Si no, comparamos el valor a insertar con el del nodo actual; si el valor es menor, se va hacia la izquierda, y si es mayor o igual, a la derecha. De esta forma, construimos el árbol agregando nodos en sus lugares correspondientes. Además, contamos con un método para imprimir el árbol y así poder mostrar su estructura.
- 
- 
- 
-  **Ejercicio 2:** 
-  Invertir un árbol binario significa intercambiar sus ramas left y right en todos los niveles. Empezamos creando la estructura del nodo igual que antes, con atributos y un valor. Para invertir, usamos un método recursivo: primero verificamos si el nodo está vacío. Luego, guardamos temporalmente el valor del hijo izquierdo, y cambiamos sus hijos left y right, de modo que los elementos del lado izquierdo pasen al derecho y viceversa. Esto se repite en cada nivel haciendo llamadas recursivas. También hay un método para imprimir el árbol y poder visualizar cómo quedó tras la inversión. 
- 
- 
- 
- **Ejercicio 3:**
-  Para listar los nodos por niveles en listas enlazadas, primero creamos una clase Nodo con atributos para hijos izquierdo, derecho y su valor. En el método principal, usamos una cola para recorrer el árbol nivel por nivel, parecido a un recorrido BFS. Comenzamos añadiendo la raíz a la cola. Mientras la cola tenga elementos, sacamos el nodo del frente, guardamos su valor en una lista enlazada correspondiente a ese nivel, y luego agregamos sus hijos izquierdo y derecho a la cola para procesarlos en el siguiente paso. Al terminar, tenemos una lista que muestra todos los niveles del árbol, facilitando entender cómo están distribuidos los nodos según su profundidad.
- 
- 
- 
- 
-  **Ejercicio 4:** 
-  Calcular la profundidad máxima de un árbol binario significa determinar cuántos niveles tiene en total. Igual que antes, creamos la clase Nodo con sus atributos. El método principal usa recursión: por cada nodo, calcula la profundidad de sus subárboles izquierdo y derecho y toma el mayor de los dos, sumando uno para incluir el nivel actual. Cuando el nodo es null, la profundidad es cero. De esta forma, recorremos todo el árbol y obtenemos el número máximo de niveles, lo que corresponde a la profundidad máxima. Por último, la clase App es el punto de entrada del programa. Primero, muestra información del estudiante usando un validador externo (solo de referencia, no hay que modificar esto). Luego, crea los árboles con los valores de ejemplo y llama a los métodos correspondientes para insertar, invertir, listar niveles y calcular la profundidad. Finalmente, imprime los resultados en pantalla. Esto ayuda a comprobar que cada ejercicio funciona correctamente y a visualizar todo en un solo lugar.
+# 📄 Informe de Ejercicios sobre Árboles Binarios
 
+**Alumno:** Sebastian Loza
 
-![alt text](image.png)
+**Fecha:** 2025-07-06
+
+---
+
+## Ejercicio 1: Inserción en Árbol Binario de Búsqueda
+
+### Descripción  
+Se implementa la inserción en un **árbol binario de búsqueda** (BST), donde:
+- Todo nodo izquierdo contiene valores **menores** que su padre.  
+- Todo nodo derecho contiene valores **mayores o iguales** al de su padre.
+
+### Estructura del Nodo  
+```java
+public class Nodo {
+    int valor;
+    Nodo left, right;
+
+    public Nodo(int valor) {
+        this.valor = valor;
+        this.left  = null;
+        this.right = null;
+    }
+}
+Algoritmo de Inserción (recursivo)
+Caso base: si nodo == null, crea y retorna un nuevo Nodo(valorNuevo).
+
+```
+
+Comparación:
+
+Si valorNuevo < nodo.valor, inserta en nodo.left.
+
+Si valorNuevo ≥ nodo.valor, inserta en nodo.right.
+
+```java
+public Nodo insertar(Nodo nodo, int valorNuevo) {
+    if (nodo == null) {
+        return new Nodo(valorNuevo);
+    }
+    if (valorNuevo < nodo.valor) {
+        nodo.left = insertar(nodo.left, valorNuevo);
+    } else {
+        nodo.right = insertar(nodo.right, valorNuevo);
+    }
+    return nodo;
+}
+Visualización
+Recorrido in-order para imprimir los valores en orden ascendente:
+
+java
+Copiar
+Editar
+public void imprimirInOrder(Nodo nodo) {
+    if (nodo == null) return;
+    imprimirInOrder(nodo.left);
+    System.out.print(nodo.valor + " ");
+    imprimirInOrder(nodo.right);
+}
+```
+---
+## Ejercicio 2: Inversión del Árbol Binario
+
+### Descripción
+Invertir (reflejar) un árbol binario consiste en intercambiar recursivamente los subárboles izquierdo y derecho de cada nodo, obteniendo el “espejo” del árbol original.
+
+Método Recursivo de Inversión
+Si nodo == null, retorna inmediatamente.
+
+Intercambia los punteros:
+
+```java
+Nodo temp   = nodo.left;
+nodo.left   = nodo.right;
+nodo.right  = temp;
+Llama recursivamente sobre los subárboles intercambiados:
+```
+```java
+invertir(nodo.left);
+invertir(nodo.right);
+```
+```java
+public void invertir(Nodo nodo) {
+    if (nodo == null) return;
+    // Swap children
+    Nodo temp = nodo.left;
+    nodo.left = nodo.right;
+    nodo.right = temp;
+    // Recurse
+    invertir(nodo.left);
+    invertir(nodo.right);
+}
+```
+### Chequeo
+#### Imprimir de nuevo con in-order o pre-order para observar el efecto espejo.
+---
+## Ejercicio 3: Listado de Nodos por Niveles (BFS)
+
+### Descripción
+Agrupar los nodos de cada nivel del árbol en una lista enlazada, equivalente a un recorrido por niveles (BFS).
+
+Implementación con Cola
+Inicializar Queue<Nodo> cola y añadir la raíz.
+
+Mientras la cola no esté vacía:
+
+Obtener int n = cola.size(); → número de nodos en el nivel actual.
+
+Crear LinkedList<Integer> nivel.
+
+Repetir n veces:
+
+Nodo curr = cola.poll();
+
+nivel.add(curr.valor);
+
+Si curr.left != null, cola.offer(curr.left).
+
+Si curr.right != null, cola.offer(curr.right).
+
+Añadir nivel a List<LinkedList<Integer>> niveles.
+
+```java
+public List<LinkedList<Integer>> listarPorNiveles(Nodo raiz) {
+    List<LinkedList<Integer>> niveles = new ArrayList<>();
+    if (raiz == null) return niveles;
+
+    Queue<Nodo> cola = new LinkedList<>();
+    cola.offer(raiz);
+
+    while (!cola.isEmpty()) {
+        int n = cola.size();
+        LinkedList<Integer> nivel = new LinkedList<>();
+        for (int i = 0; i < n; i++) {
+            Nodo curr = cola.poll();
+            nivel.add(curr.valor);
+            if (curr.left != null)  cola.offer(curr.left);
+            if (curr.right != null) cola.offer(curr.right);
+        }
+        niveles.add(nivel);
+    }
+    return niveles;
+}
+```
+### Resultado
+#### Cada LinkedList en la colección corresponde a un nivel del árbol, listando los valores de izquierda a derecha.
+---
+## Ejercicio 4: Cálculo de Profundidad Máxima
+### Descripción
+
+Calcular la altura (profundidad máxima) del árbol, es decir, el número total de niveles desde la raíz hasta la hoja más profunda.
+
+Algoritmo Recursivo
+Caso base: si nodo == null, retorna 0.
+
+Calcular recursivamente:
+```java
+int hL = profundidadMaxima(nodo.left);
+int hR = profundidadMaxima(nodo.right);
+return 1 + Math.max(hL, hR);
+java
+Copiar
+Editar
+public int profundidadMaxima(Nodo nodo) {
+    if (nodo == null) return 0;
+    int hL = profundidadMaxima(nodo.left);
+    int hR = profundidadMaxima(nodo.right);
+    return 1 + Math.max(hL, hR);
+}
+```
+## Interpretación
+
+El valor retornado representa la cantidad de niveles, contando la raíz como nivel 1.
+
+🚀 Clase Principal y Flujo de Ejecución
+App.java — punto de entrada.
+
+Muestra los datos del estudiante (ej. usando un validador externo).
+
+Crea ejemplos de árboles con valores predeterminados.
+
+## Invoca en secuencia:
+```
+insertar(...)
+
+invertir(...)
+
+listarPorNiveles(...)
+
+profundidadMaxima(...)
+```
+Imprime en consola los resultados de cada ejercicio.
+
+Este diseño modular permite probar cada funcionalidad de forma aislada y luego junto en un único flujo de trabajo.
+
+## Conclusión
+Estos cuatro ejercicios abarcan las operaciones fundamentales sobre árboles binarios:
+
+Inserción en BST (mantiene orden).
+
+Inversión (genera el espejo).
+
+Recorrido por niveles (agrupa nodos por profundidad).
+
+Cálculo de altura (profundidad máxima).
+
+La implementación recursiva no solo simplifica el código, sino que también refuerza la comprensión profunda de los algoritmos sobre estructuras dinámicas como los árboles.
+
+## Salida de la Terminal
+![alt text](image-1.png)
